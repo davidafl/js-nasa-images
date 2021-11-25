@@ -32,20 +32,19 @@
                 <h4>Search Images:</h4>
             </div>
 
-            <label for="dateinput" class="form-label">Date: (YYYY-MM-DD) or Sol</label>
-            <input class="form-control" id="dateinput" placeholder="Type to search...">
+            <label for="dateid" class="form-label">Date: (YYYY-MM-DD) or Sol</label>
+            <input class="form-control" id="dateid" placeholder="Type to search...">
 
-            <label for="mission" class="form-label">Mission:</label>
-            <select class="form-select" aria-label="Default select example" id="mission">
+            <label for="missionid" class="form-label">Mission:</label>
+            <select class="form-select" aria-label="Default select example" id="missionid">
                 <option selected>Open this select menu</option>
                 <option value="curiosity">Curiosity</option>
                 <option value="spirit">Spirit</option>
                 <option value="opportunity">Opportunity</option>
             </select>
 
-            <label for="camera" class="form-label">Camera:</label>
-            <select class="form-select" aria-label="Default select example" id="camera">
-                <option selected>Open this select menu</option>
+            <label for="cameraid" class="form-label">Camera:</label>
+            <select class="form-select" aria-label="Default select example" id="cameraid">
                 <option value="FHAZ">FHAZ</option>
                 <option value="RHAZ">RHAZ</option>
                 <option value="MAST">MAST</option>
@@ -57,12 +56,20 @@
                 <option value="MINITES">MINITES</option>
             </select>
 
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary mt-2" type="button" id="searchbtn">Search</button>
+                <button class="btn btn-primary mt-2" type="button" id="clearbtn">Clear</button>
+            </div>
+
         </div>
         <div class="col-12 col-md-6">
             <div class="alert alert-primary mt-2 fw-bold" role="alert">
                 <h4>Saved Images</h4>
             </div>
-
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary" type="button">Start Slide Show</button>
+                <button class="btn btn-primary" type="button">Stop Slide Show</button>
+            </div>
         </div>
     </div>
 
@@ -71,14 +78,8 @@
             <div class="alert alert-primary mt-2 fw-bold" role="alert">
                 <h4>search Results:</h4>
             </div>
-            <div class="card" style="width: 18rem;">
-                <img src="./images/mars-banner.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Title</h5>
-                    <p class="card-text">Date, Year, Camera, Mission</p>
-                    <a href="#" class="btn btn-primary">Save</a>
-                    <a href="#" class="btn btn-primary">Full Size</a>
-                </div>
+            <div id="cardsid">
+
             </div>
         </div>
     </div>
