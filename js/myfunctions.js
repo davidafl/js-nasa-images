@@ -38,33 +38,75 @@ function searchImage(){
         });
 }
 
-
+function toHtmlSavedList(myMap){
+    let htmlList = "";
+    for (const [key,image] of myMap) {
+        htmlList += `<li>
+            <a href="${image.img_src}" target="_blank">image id: ${image.id}</a> <br/>
+            Earth Date: ${image.earth_date},Sol: ${image.sol}, Camera: ${image.camera.namge}
+            </li>`
+    }
+    return htmlList;
+}
 function showSearchResults(){
     let allcards = "";
     for (const image of photos) {
         allcards += toHtmlCard(image);
     }
     document.getElementById("cardsid").innerHTML = allcards;
+
+    for (const image of photos) {
+        document.getElementById(image.id).addEventListener("click", (e)=> {
+            let found = photos.find(em => em.id == e.target.id);
+
+            savedMap.set(e.target.id, found);
+
+            document.getElementById("savedlist").innerHTML = toHtmlSavedList(savedMap);
+    })
+    }
 }
 
 function toHtmlCard(photo) {
-    return `
+    return `<div class="col mb-3">
             <div class="card" style="width: 18rem;">
                 <img src="${photo.img_src}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">Title</h5>
                     <p class="card-text"> 
                     ${photo.earth_date} <br/>
                     ${photo.sol} <br/>  
                     ${photo.camera.name} <br/>
                     ${photo.rover.name}</p>  
-                    <a href="#" class="btn btn-primary">Save</a>
-                    <a href="#" class="btn btn-primary">Full Size</a>
+                    <a href="#" class="btn btn-primary" id=${photo.id}>Save</a>
+                    <a href="${photo.img_src}" class="btn btn-primary" target="_blank">Full Size</a>
                 </div>
+            </div>
             </div>`
 }
 
 const myarray = {};
+
+function createCarousel(){
+    let retHtml = "";
+    let isFirst = true;
+    for (const [key,img] of savedMap){
+        let isactive = isFirst ? "active " : "";
+        retHtml += `
+            <div class="carousel-item ${isactive}">
+                <img src="${img.img_src}" class="d-block w-100" alt="...">
+            </div>
+            `
+        isFirst = false;
+    }
+    document.getElementById("innercarousel").innerHTML = retHtml;
+    document.getElementById("carousel").classList.toggle("d-none");
+}
+
+function hideCarousel(){
+    var myCarousel = document.getElementById("carousel")
+    var carousel = new bootstrap.Carousel(myCarousel)
+    carousel.pause();
+    myCarousel.classList.toggle("d-none");
+}
 
 function initMars(){
     getData("Curiosity");
@@ -92,11 +134,16 @@ function getData(mission) {
         });
 }
 
+const savedMap = new Map();
+
+
 document.addEventListener('DOMContentLoaded', function () {
     initMars();
      //document.querySelector("#getdata").addEventListener("click", getData);
 
-    document.getElementById("searchbtn").addEventListener("click", searchImage)
+    document.getElementById("searchbtn").addEventListener("click", searchImage);
+    document.getElementById("startslide").addEventListener("click",createCarousel);
+    document.getElementById("stopslide").addEventListener("click",hideCarousel);
 
 
 }, false);

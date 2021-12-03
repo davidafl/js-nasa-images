@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0954897-46ee-4363-9814-7cfe5ab796e9" name="Changes" comment="frontend-complete">
+    <list default="true" id="f0954897-46ee-4363-9814-7cfe5ab796e9" name="Changes" comment="search-is-working-no-validation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/myfunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/myfunctions.js" afterDir="false" />
@@ -63,7 +63,7 @@
       <workItem from="1637613824576" duration="5922000" />
       <workItem from="1637672903389" duration="903000" />
       <workItem from="1637674175059" duration="34000" />
-      <workItem from="1637785813498" duration="5945000" />
+      <workItem from="1637785813498" duration="19479000" />
     </task>
     <task id="LOCAL-00001" summary="grid">
       <created>1637507868185</created>
@@ -86,7 +86,14 @@
       <option name="project" value="LOCAL" />
       <updated>1637619978685</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="search-is-working-no-validation">
+      <created>1637798629563</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1637798629563</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,6 +114,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="grid" />
     <MESSAGE value="frontend-complete" />
-    <option name="LAST_COMMIT_MESSAGE" value="frontend-complete" />
+    <MESSAGE value="search-is-working-no-validation" />
+    <option name="LAST_COMMIT_MESSAGE" value="search-is-working-no-validation" />
   </component>
 </project>
