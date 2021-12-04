@@ -6,20 +6,22 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script src="js/myfunctions.js"></script>
+    <link href="css/mycss.css" rel="stylesheet">
     <title>Exercise 3 - Internet Programming Course template</title>
 </head>
 <body>
 
 <div class="container-fluid">
+    <div id="loading" class="d-none"></div>
     <div class="row text-center"
          style="background-image: url('https://www.science.org.au/curious/sites/default/files/article-banner-image/2-mars-banner.jpg');
           background-repeat: no-repeat;
           background-position:center;
+          ">
 
-">
         <div class="col-12 text-center text-white">
             <h1>Mars Image Browser</h1>
-            <h3>Browse NASA Mars images and save your prefered ones.</h3>
+            <h5>Browse NASA Mars images and save your prefered ones.</h5>
             <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Who is submitting
             </button>
@@ -32,19 +34,23 @@
                 <h4>Search Images:</h4>
             </div>
 
-            <label for="dateid" class="form-label">Date: (YYYY-MM-DD) or Sol</label>
-            <input class="form-control" id="dateid" placeholder="Type to search...">
+            <form id="searchform" >
+
+            <label for="dateid" class="form-label is-invalid">Date: (YYYY-MM-DD) or Sol</label>
+            <input class="form-control inputentry" id="dateid" placeholder="enter date..." required>
+            <div class="text-danger errormessage"></div>
 
             <label for="missionid" class="form-label">Mission:</label>
-            <select class="form-select" aria-label="Default select example" id="missionid">
-                <option selected>Open this select menu</option>
-                <option value="curiosity">Curiosity</option>
-                <option value="spirit">Spirit</option>
-                <option value="opportunity">Opportunity</option>
+            <select class="form-select inputentry" aria-label="Default select example" id="missionid" required>
+                <option selected value="">Choose a rover</option>
+                <option value="Curiosity">Curiosity</option>
+                <option value="Spirit">Spirit</option>
+                <option value="Opportunity">Opportunity</option>
             </select>
 
             <label for="cameraid" class="form-label">Camera:</label>
-            <select class="form-select" aria-label="Default select example" id="cameraid">
+            <select class="form-select inputentry" aria-label="Default select example" id="cameraid" required>
+                <option selected value="">Choose a Camera</option>
                 <option value="FHAZ">FHAZ</option>
                 <option value="RHAZ">RHAZ</option>
                 <option value="MAST">MAST</option>
@@ -57,9 +63,10 @@
             </select>
 
             <div class="d-grid gap-2">
-                <button class="btn btn-primary mt-2" type="button" id="searchbtn">Search</button>
-                <button class="btn btn-primary mt-2" type="button" id="clearbtn">Clear</button>
+                <input class="btn btn-primary mt-2" type="submit" value="search">
+                <button class="btn btn-primary mt-1" type="button" id="clearbtn">Clear</button>
             </div>
+            </form>
 
         </div>
         <div class="col-12 col-md-6">
@@ -80,7 +87,7 @@
     <div class="row justify-content-around">
         <div class="col-6">
     <div id="carousel" class="carousel slide d-none" data-bs-ride="carousel">
-        <div class="carousel-inner" id="innercarousel">
+        <div class="carousel-inner mt-2" id="innercarousel">
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -101,6 +108,23 @@
             </div>
             <div class="row" id="cardsid">
 
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal for -->
+<div class="modal" tabindex="-1" id="errormodal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Error</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="errormodalmsg">image already saved</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
