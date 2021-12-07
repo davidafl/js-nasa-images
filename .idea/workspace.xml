@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0954897-46ee-4363-9814-7cfe5ab796e9" name="Changes" comment="carrousel-working-somtimes">
-      <change afterPath="$PROJECT_DIR$/images/loading.gif" afterDir="false" />
+    <list default="true" id="f0954897-46ee-4363-9814-7cfe5ab796e9" name="Changes" comment="before refactoring modules">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/mycss.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/mycss.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/myfunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/myfunctions.js" afterDir="false" />
     </list>
@@ -74,7 +72,15 @@
       <workItem from="1637672903389" duration="903000" />
       <workItem from="1637674175059" duration="34000" />
       <workItem from="1637785813498" duration="19858000" />
-      <workItem from="1638626830622" duration="21163000" />
+      <workItem from="1638626830622" duration="22859000" />
+      <workItem from="1638717461191" duration="805000" />
+      <workItem from="1638795946261" duration="4366000" />
+      <workItem from="1638803392655" duration="2005000" />
+      <workItem from="1638809408346" duration="67000" />
+      <workItem from="1638809745390" duration="5009000" />
+      <workItem from="1638882765692" duration="74000" />
+      <workItem from="1638884471457" duration="740000" />
+      <workItem from="1638897529979" duration="5573000" />
     </task>
     <task id="LOCAL-00001" summary="grid">
       <created>1637507868185</created>
@@ -111,7 +117,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638550775750</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="loading-gif">
+      <created>1638657969158</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1638657969159</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -134,6 +147,8 @@
     <MESSAGE value="frontend-complete" />
     <MESSAGE value="search-is-working-no-validation" />
     <MESSAGE value="carrousel-working-somtimes" />
-    <option name="LAST_COMMIT_MESSAGE" value="carrousel-working-somtimes" />
+    <MESSAGE value="loading-gif" />
+    <MESSAGE value="before refactoring modules" />
+    <option name="LAST_COMMIT_MESSAGE" value="before refactoring modules" />
   </component>
 </project>
