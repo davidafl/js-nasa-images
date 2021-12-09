@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f0954897-46ee-4363-9814-7cfe5ab796e9" name="Changes" comment="documentation-on-funcs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/myfunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/myfunctions.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -80,7 +81,7 @@
       <workItem from="1638882765692" duration="74000" />
       <workItem from="1638884471457" duration="740000" />
       <workItem from="1638897529979" duration="5615000" />
-      <workItem from="1639052094391" duration="4572000" />
+      <workItem from="1639052094391" duration="6107000" />
     </task>
     <task id="LOCAL-00001" summary="grid">
       <created>1637507868185</created>
@@ -131,7 +132,14 @@
       <option name="project" value="LOCAL" />
       <updated>1638905428746</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="documentation-on-funcs">
+      <created>1639063783916</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1639063783916</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

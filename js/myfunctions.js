@@ -1,194 +1,15 @@
 // written by David Aflalo 09/12/2021
 
 "use strict";
-
 /**
- * this modoule handles all validation functions
- */
-const validatorModule = (function () {
-
-    const EMPTY_TXT_MSG = "please enter a non empty text";
-    const LETTER_OR_NUMBERS = "text must contain letter and/or digits only";
-    const SOL_OR_DATE = "input is not a sol number or valid date";
-    const INVALID_DATE = "Invalid date";
-
-    /**
-     * check if string is non empty
-     * @param str: the string (non null or undefined)
-     * @returns {{isValid: boolean, message: string}}
-     * isValid: return true if str is not empty
-     * message: the error message
-     */
-    const isNotEmpty = function (str) {
-        return {
-            isValid: (str.length !== 0),
-            message: EMPTY_TXT_MSG
-        };
-    }
-
-    /**
-     * check if string contains only letter A-Z or a-z or digits
-     * @param str: the string (non null or undefined)
-     * @returns {{isValid: boolean, message: string}}
-     * isValid: return true if str is not empty
-     * message: the error message
-     */
-    const hasLetterAndDigit = function (str) {
-        return {
-            isValid: /^[a-zA-Z0-9]+$/.test(str),
-            message: LETTER_OR_NUMBERS
-        }
-    }
-
-    /**
-     *
-     * @param str: the string (non null or undefined)
-     * @returns {{isValid: boolean, message: string}}
-     * isValid: return true if str is not empty
-     * message: the error message
-     */
-    const isNumber = function (str) {
-        return {
-            isValid: /^\+?(0|[1-9]\d*)$/.test(str),
-            message: SOL_OR_DATE
-        }
-    }
-
-    /**
-     *
-     * @param str: the string (non null or undefined)
-     * @returns {{isValid: boolean, message: string}|{isValid: boolean, message: string}}
-     * isValid: return true if str is not empty
-     * message: the error message
-     */
-    const isDate = function (str) {
-        // Validates that the input string is a valid date formatted as "mm/dd/yyyy"
-        // First check for the pattern
-        if (! /^\d{4}-\d{2}-\d{2}$/.test(str))
-            return {
-                isValid: false,
-                message: INVALID_DATE
-            }
-        // Parse the date parts to integers
-        let parts = str.split("-");
-        let day = parseInt(parts[2], 10);
-        let month = parseInt(parts[1], 10);
-        let year = parseInt(parts[0], 10);
-
-        // Check the ranges of month and year
-        if (year < 1000 || year > 3000 || month === 0 || month > 12)
-            return {
-                isValid: false,
-                message: INVALID_DATE
-            }
-        let monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-        // Adjust for leap years
-        if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0))
-            monthLength[1] = 29;
-
-        return {
-            isValid: day > 0 && day <= monthLength[month - 1],
-            message: INVALID_DATE
-        }
-    }
-
-    return {
-        isNotEmpty: isNotEmpty,
-        hasLetterAndDigit: hasLetterAndDigit,
-        isDate: isDate,
-        isNumber: isNumber
-    }
-})();
-
-/**
- * this module handels all html generated in the program
- */
-const htmlGenerator = (function() {
-    let publicData = {}
-
-    /**
-     * creates html of the saved list
-     * @param myMap: a map of photos according to the format of nasa api
-     * @returns {string}
-     * string: the html to insert in the index
-     */
-    const toHtmlSavedList = function (myMap) {
-        let htmlList = "";
-        for (const [key, image] of myMap) {
-            htmlList += `<li>
-            <a href="${image.img_src}" target="_blank">image id: ${image.id}</a> <br/>
-            Earth Date: ${image.earth_date},Sol: ${image.sol}, Camera: ${image.camera.name}
-            </li>`
-        }
-        return htmlList;
-    }
-
-    /**
-     * @param photo: creates a single card for of a photo for the search results
-     * @returns the card html to insert in the index
-     */
-    const toHtmlCard = function (photo) {
-        return `<div class="col mb-3">
-            <div class="card" style="width: 18rem;">
-                <img src="${photo.img_src}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <p class="card-text"> 
-                    ${photo.earth_date} <br/>
-                    ${photo.sol} <br/>  
-                    ${photo.camera.name} <br/>
-                    ${photo.rover.name}</p>  
-                    <a href="#" class="btn btn-primary" id=${photo.id}>Save</a>
-                    <a href="${photo.img_src}" class="btn btn-primary" target="_blank">Full Size</a>
-                </div>
-            </div>
-            </div>`
-    }
-
-
-    /**
-     *
-     * @param theMap
-     * @returns {string}
-     * string: the html to the carrousel
-     */
-    const toHtmlCaroussel = function(theMap) {
-        let retHtml = "";
-        let isFirst = true;
-        for (const [key, img] of theMap) {
-            let isactive = isFirst ? "active " : "";
-            retHtml += `
-            <div class="carousel-item ${isactive}">
-                <img src="${img.img_src}" class="d-block w-100" alt="...">
-                <div class="carousel-caption d-none d-md-block">
-                    <h5>${img.camera.name}</h5>
-                    <p>${img.earth_date}</p>
-                    <a href="${img.img_src}" class="btn btn-primary" target="_blank">Full Size</a>
-
-                </div>
-            </div>
-            `
-            isFirst = false;
-        }
-        return retHtml;
-    }
-
-    publicData.toHtmlCard = toHtmlCard;
-    publicData.toHtmlSavedList = toHtmlSavedList;
-    publicData.toHtmlCaroussel = toHtmlCaroussel;
-
-    return publicData;
-})();
-
-/**
- * this modoule handle all the functions that are made for this exercise
+ * modoule to handle all the functions that are made for this exercise
  */
 const ex3Module = (function () {
 
-    let publicData = {}
-
     // my private API Key
     const APIKEY = "dj1uwfwhwqZX3By9FdFIgxlopnNlzmGDD4U3uYeY";
+
+    let publicData = {}
 
     // variables
     let photos = null;
@@ -449,6 +270,184 @@ const ex3Module = (function () {
         clearValidationErrors();
         document.getElementById("cardsid").innerHTML = "";
     }
+    return publicData;
+})();
+
+/**
+ * modoule to handle all validation functions
+ */
+const validatorModule = (function () {
+
+    const EMPTY_TXT_MSG = "please enter a non empty text";
+    const LETTER_OR_NUMBERS = "text must contain letter and/or digits only";
+    const SOL_OR_DATE = "input is not a sol number or valid date";
+    const INVALID_DATE = "Invalid date";
+
+    /**
+     * check if string is non empty
+     * @param str: the string (non null or undefined)
+     * @returns {{isValid: boolean, message: string}}
+     * isValid: return true if str is not empty
+     * message: the error message
+     */
+    const isNotEmpty = function (str) {
+        return {
+            isValid: (str.length !== 0),
+            message: EMPTY_TXT_MSG
+        };
+    }
+
+    /**
+     * check if string contains only letter A-Z or a-z or digits
+     * @param str: the string (non null or undefined)
+     * @returns {{isValid: boolean, message: string}}
+     * isValid: return true if str is not empty
+     * message: the error message
+     */
+    const hasLetterAndDigit = function (str) {
+        return {
+            isValid: /^[a-zA-Z0-9]+$/.test(str),
+            message: LETTER_OR_NUMBERS
+        }
+    }
+
+    /**
+     *
+     * @param str: the string (non null or undefined)
+     * @returns {{isValid: boolean, message: string}}
+     * isValid: return true if str is not empty
+     * message: the error message
+     */
+    const isNumber = function (str) {
+        return {
+            isValid: /^\+?(0|[1-9]\d*)$/.test(str),
+            message: SOL_OR_DATE
+        }
+    }
+
+    /**
+     *
+     * @param str: the string (non null or undefined)
+     * @returns {{isValid: boolean, message: string}|{isValid: boolean, message: string}}
+     * isValid: return true if str is not empty
+     * message: the error message
+     */
+    const isDate = function (str) {
+        // Validates that the input string is a valid date formatted as "mm/dd/yyyy"
+        // First check for the pattern
+        if (! /^\d{4}-\d{2}-\d{2}$/.test(str))
+            return {
+                isValid: false,
+                message: INVALID_DATE
+            }
+        // Parse the date parts to integers
+        let parts = str.split("-");
+        let day = parseInt(parts[2], 10);
+        let month = parseInt(parts[1], 10);
+        let year = parseInt(parts[0], 10);
+
+        // Check the ranges of month and year
+        if (year < 1000 || year > 3000 || month === 0 || month > 12)
+            return {
+                isValid: false,
+                message: INVALID_DATE
+            }
+        let monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+        // Adjust for leap years
+        if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0))
+            monthLength[1] = 29;
+
+        return {
+            isValid: day > 0 && day <= monthLength[month - 1],
+            message: INVALID_DATE
+        }
+    }
+
+    return {
+        isNotEmpty: isNotEmpty,
+        hasLetterAndDigit: hasLetterAndDigit,
+        isDate: isDate,
+        isNumber: isNumber
+    }
+})();
+
+/**
+ * this module handels all html generated in the program
+ */
+const htmlGenerator = (function() {
+    let publicData = {}
+
+    /**
+     * creates html of the saved list
+     * @param myMap: a map of photos according to the format of nasa api
+     * @returns {string}
+     * string: the html to insert in the index
+     */
+    const toHtmlSavedList = function (myMap) {
+        let htmlList = "";
+        for (const [key, image] of myMap) {
+            htmlList += `<li>
+            <a href="${image.img_src}" target="_blank">image id: ${image.id}</a> <br/>
+            Earth Date: ${image.earth_date},Sol: ${image.sol}, Camera: ${image.camera.name}
+            </li>`
+        }
+        return htmlList;
+    }
+
+    /**
+     * @param photo: creates a single card for of a photo for the search results
+     * @returns the card html to insert in the index
+     */
+    const toHtmlCard = function (photo) {
+        return `<div class="col mb-3">
+            <div class="card" style="width: 18rem;">
+                <img src="${photo.img_src}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <p class="card-text"> 
+                    ${photo.earth_date} <br/>
+                    ${photo.sol} <br/>  
+                    ${photo.camera.name} <br/>
+                    ${photo.rover.name}</p>  
+                    <a href="#" class="btn btn-primary" id=${photo.id}>Save</a>
+                    <a href="${photo.img_src}" class="btn btn-primary" target="_blank">Full Size</a>
+                </div>
+            </div>
+            </div>`
+    }
+
+
+    /**
+     *
+     * @param theMap
+     * @returns {string}
+     * string: the html to the carrousel
+     */
+    const toHtmlCaroussel = function(theMap) {
+        let retHtml = "";
+        let isFirst = true;
+        for (const [key, img] of theMap) {
+            let isactive = isFirst ? "active " : "";
+            retHtml += `
+            <div class="carousel-item ${isactive}">
+                <img src="${img.img_src}" class="d-block w-100" alt="...">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>${img.camera.name}</h5>
+                    <p>${img.earth_date}</p>
+                    <a href="${img.img_src}" class="btn btn-primary" target="_blank">Full Size</a>
+
+                </div>
+            </div>
+            `
+            isFirst = false;
+        }
+        return retHtml;
+    }
+
+    publicData.toHtmlCard = toHtmlCard;
+    publicData.toHtmlSavedList = toHtmlSavedList;
+    publicData.toHtmlCaroussel = toHtmlCaroussel;
+
     return publicData;
 })();
 
