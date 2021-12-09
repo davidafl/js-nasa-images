@@ -1,110 +1,65 @@
-// commented out when debugging
-// (function () {
+// written by David Aflalo 09/12/2021
+
 "use strict";
 
-// to do:
-
-// validation:
-// if manifest failes to load -> previw a msg "site not avalible at the moment" V
-
-// the mission you have selected requires a date after {x} V
-// the mission you have selected requires a date before {x} V
-// input is required here V
-
-// error msg if u try to save a saved image (pop-up) V
-
-// no images found! V
-
-// clear button: removes search and results. V
-
-// gif when fetch loading
-
-// full size button + info on slide show
-
-
-const APIKEY = "dj1uwfwhwqZX3By9FdFIgxlopnNlzmGDD4U3uYeY";
-
-let photos = null;
-const nasaMinMax = {};
-const savedMap = new Map();
-let websiteInitialized = true;
-
-function status(response) {
-    if (response.status >= 200 && response.status < 300) {
-        return Promise.resolve(response)
-    } else {
-        return Promise.reject(new Error(response.statusText))
-    }
-}
-
-// returns a promise!
-function json(response) {
-    return response.json()
-}
-
-function searchImage(e) {
-
-    e.preventDefault();
-
-    if (!websiteInitialized){
-        showErrorModal("search not avalible at the moment. please reload the page");
-        return
-    }
-
-    if (validateForm()){
-        const mission = document.getElementById("missionid").value;
-        const date = document.getElementById('dateid').value;
-        const camera = document.getElementById('cameraid').value;
-        // start gif
-        toggleLoadingGif();
-        fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${mission}/photos?earth_date=${date}&camera=${camera}&api_key=${APIKEY}`)
-            .then(status)
-            .then(json)
-            .then(function (response) {
-                photos = response.photos;
-                // stop gif
-                toggleLoadingGif();
-                showSearchResults();
-
-            })
-            .catch(function (error) {
-                // stop gif
-                toggleLoadingGif();
-                console.log('Request failed', error);
-            });
-    }
-}
-
-function toggleLoadingGif(){
-    document.getElementById("loading").classList.toggle("d-none");
-}
-
-// a module for all string validation functions
+/**
+ * this modoule handles all validation functions
+ */
 const validatorModule = (function () {
+
+    const EMPTY_TXT_MSG = "please enter a non empty text";
+    const LETTER_OR_NUMBERS = "text must contain letter and/or digits only";
+    const SOL_OR_DATE = "input is not a sol number or valid date";
+    const INVALID_DATE = "Invalid date";
+
+    /**
+     * check if string is non empty
+     * @param str: the string (non null or undefined)
+     * @returns {{isValid: boolean, message: string}}
+     * isValid: return true if str is not empty
+     * message: the error message
+     */
     const isNotEmpty = function (str) {
         return {
             isValid: (str.length !== 0),
-            message: 'please enter a non empty text'
+            message: EMPTY_TXT_MSG
         };
     }
 
+    /**
+     * check if string contains only letter A-Z or a-z or digits
+     * @param str: the string (non null or undefined)
+     * @returns {{isValid: boolean, message: string}}
+     * isValid: return true if str is not empty
+     * message: the error message
+     */
     const hasLetterAndDigit = function (str) {
         return {
             isValid: /^[a-zA-Z0-9]+$/.test(str),
-            message: 'text must contain letter and/or digits only'
-        }
-    }
-    const isNumber = function (str) {
-        return {
-            isValid: /^\+?(0|[1-9]\d*)$/.test(str),
-            message: 'input is not a sol number or valid date'
+            message: LETTER_OR_NUMBERS
         }
     }
 
     /**
      *
-     * @param str
+     * @param str: the string (non null or undefined)
+     * @returns {{isValid: boolean, message: string}}
+     * isValid: return true if str is not empty
+     * message: the error message
+     */
+    const isNumber = function (str) {
+        return {
+            isValid: /^\+?(0|[1-9]\d*)$/.test(str),
+            message: SOL_OR_DATE
+        }
+    }
+
+    /**
+     *
+     * @param str: the string (non null or undefined)
      * @returns {{isValid: boolean, message: string}|{isValid: boolean, message: string}}
+     * isValid: return true if str is not empty
+     * message: the error message
      */
     const isDate = function (str) {
         // Validates that the input string is a valid date formatted as "mm/dd/yyyy"
@@ -112,7 +67,7 @@ const validatorModule = (function () {
         if (! /^\d{4}-\d{2}-\d{2}$/.test(str))
             return {
                 isValid: false,
-                message: 'Invalid date'
+                message: INVALID_DATE
             }
         // Parse the date parts to integers
         let parts = str.split("-");
@@ -121,20 +76,20 @@ const validatorModule = (function () {
         let year = parseInt(parts[0], 10);
 
         // Check the ranges of month and year
-        if (year < 1000 || year > 3000 || month == 0 || month > 12)
+        if (year < 1000 || year > 3000 || month === 0 || month > 12)
             return {
                 isValid: false,
-                message: 'Invalid date'
+                message: INVALID_DATE
             }
         let monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
         // Adjust for leap years
-        if (year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+        if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0))
             monthLength[1] = 29;
 
         return {
             isValid: day > 0 && day <= monthLength[month - 1],
-            message: 'Invalid date'
+            message: INVALID_DATE
         }
     }
 
@@ -146,102 +101,35 @@ const validatorModule = (function () {
     }
 })();
 
-function toHtmlSavedList(myMap) {
-    let htmlList = "";
-    for (const [key, image] of myMap) {
-        htmlList += `<li>
-            <a href="${image.img_src}" target="_blank">image id: ${image.id}</a> <br/>
-            Earth Date: ${image.earth_date},Sol: ${image.sol}, Camera: ${image.camera.namge}
-            </li>`
-    }
-    return htmlList;
-}
-
 /**
- * display error msg bellow some element
- * @param element - the element
- * @param msg - the message
+ * this module handels all html generated in the program
  */
-function showValidationError(element,msg) {
-    element.nextElementSibling.innerHTML = msg;
-    element.classList.add("is-invalid")
-}
+const htmlGenerator = (function() {
+    let publicData = {}
 
-function clearValidationErrors() {
-    document.querySelectorAll(".inputentry").forEach(
-        (elem)=>{elem.classList.remove("is-invalid")}
-    )
-    document.querySelectorAll(".errormessage").forEach(
-        (elem)=>{elem.innerHTML = ""}
-    )
-}
-function validateForm() {
-    clearValidationErrors();
-    let formValidation = true;
-
-    let mission = document.getElementById("missionid").value;
-    let inputdate = document.getElementById("dateid").value;
-
-    let testDate = validatorModule.isDate(inputdate);
-    let testNumber = validatorModule.isNumber(inputdate);
-    if (!testDate.isValid) {
-        if (!testNumber.isValid) {
-            showValidationError(document.getElementById("dateid"),testNumber.message);
-            formValidation = false;
-        } else {
-            //check range of sol
-            if (inputdate > nasaMinMax[mission].max_sol) {
-                showValidationError(document.getElementById("dateid"),
-                    `max sol date is ${nasaMinMax[mission].max_sol}`)
-                formValidation = false;
-            }
+    /**
+     * creates html of the saved list
+     * @param myMap: a map of photos according to the format of nasa api
+     * @returns {string}
+     * string: the html to insert in the index
+     */
+    const toHtmlSavedList = function (myMap) {
+        let htmlList = "";
+        for (const [key, image] of myMap) {
+            htmlList += `<li>
+            <a href="${image.img_src}" target="_blank">image id: ${image.id}</a> <br/>
+            Earth Date: ${image.earth_date},Sol: ${image.sol}, Camera: ${image.camera.name}
+            </li>`
         }
-    } else {
-        // check range of date
-        if ((Date.parse(inputdate) > Date.parse(nasaMinMax[mission].max_date))) {
-            showValidationError(document.getElementById("dateid"),
-                `the mission you have selected requires a date before ${nasaMinMax[mission].max_date}`);
-                formValidation = false;
-        }
-        else if (Date.parse(inputdate) < Date.parse(nasaMinMax[mission].landing_date)) {
-            showValidationError(document.getElementById("dateid"),
-                `the mission you have selected requires a date after ${nasaMinMax[mission].landing_date}`);
-                formValidation = false;
-        }
+        return htmlList;
     }
-    return formValidation;
 
-}
-
-function showSearchResults() {
-    let allcards = "";
-    if (photos.length === 0) {
-        document.getElementById("cardsid").innerHTML = `<div class="alert alert-danger">no images found</div>`;
-        return;
-    }
-    for (const image of photos) {
-        allcards += toHtmlCard(image);
-    }
-    document.getElementById("cardsid").innerHTML = allcards;
-
-    for (const image of photos) {
-        document.getElementById(image.id).addEventListener("click", (e) => {
-            let found = photos.find(em => em.id == e.target.id);
-
-            if (savedMap.get(e.target.id) != null) {
-                // pop up msg
-                showErrorModal("image already saved");
-            }
-            else {
-                savedMap.set(e.target.id, found);
-                document.getElementById("savedlist").innerHTML = toHtmlSavedList(savedMap);
-            }
-        })
-    }
-}
-
-function toHtmlCard(photo) {
-    return `<div class="col mb-3">
+    /**
+     * @param photo: creates a single card for of a photo for the search results
+     * @returns the card html to insert in the index
+     */
+    const toHtmlCard = function (photo) {
+        return `<div class="col mb-3">
             <div class="card" style="width: 18rem;">
                 <img src="${photo.img_src}" class="card-img-top" alt="...">
                 <div class="card-body">
@@ -255,77 +143,324 @@ function toHtmlCard(photo) {
                 </div>
             </div>
             </div>`
-}
+    }
 
-function createCarousel() {
-    let retHtml = "";
-    let isFirst = true;
-    for (const [key, img] of savedMap) {
-        let isactive = isFirst ? "active " : "";
-        retHtml += `
+
+    /**
+     *
+     * @param theMap
+     * @returns {string}
+     * string: the html to the carrousel
+     */
+    const toHtmlCaroussel = function(theMap) {
+        let retHtml = "";
+        let isFirst = true;
+        for (const [key, img] of theMap) {
+            let isactive = isFirst ? "active " : "";
+            retHtml += `
             <div class="carousel-item ${isactive}">
                 <img src="${img.img_src}" class="d-block w-100" alt="...">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>${img.camera.name}</h5>
+                    <p>${img.earth_date}</p>
+                    <a href="${img.img_src}" class="btn btn-primary" target="_blank">Full Size</a>
+
+                </div>
             </div>
             `
-        isFirst = false;
+            isFirst = false;
+        }
+        return retHtml;
     }
-    document.getElementById("innercarousel").innerHTML = retHtml;
-    document.getElementById("carousel").classList.toggle("d-none");
-}
 
-function hideCarousel() {
-    let myCarousel = document.getElementById("carousel")
-    let carousel = new bootstrap.Carousel(myCarousel)
-    carousel.pause();
-    myCarousel.classList.toggle("d-none");
-}
+    publicData.toHtmlCard = toHtmlCard;
+    publicData.toHtmlSavedList = toHtmlSavedList;
+    publicData.toHtmlCaroussel = toHtmlCaroussel;
 
-function initMars() {
-    getData("Curiosity");
-    getData("Spirit");
-    getData("Opportunity");
-}
+    return publicData;
+})();
 
-function showErrorModal(msg){
-    let myModal = new bootstrap.Modal(document.getElementById("errormodal"))
-    document.getElementById("errormodalmsg").innerHTML = msg;
-    myModal.show();
-}
+/**
+ * this modoule handle all the functions that are made for this exercise
+ */
+const ex3Module = (function () {
+
+    let publicData = {}
+
+    // my private API Key
+    const APIKEY = "dj1uwfwhwqZX3By9FdFIgxlopnNlzmGDD4U3uYeY";
+
+    // variables
+    let photos = null;
+    const nasaMinMax = {};
+    const savedMap = new Map();
+    let websiteInitialized = true;
+
+    // const messages
+    const SEARCH_NOT_AVAILABLE = "search not avalible at the moment. please reload the page";
+    const REQUEST_FAILED = "Request failed";
+    const IMAGE_ALREADY_SAVED = "image already saved";
+    const INIT_ERROR = "there was some problem initializing the website. refresh this page";
+    const NO_IMAGES_FOUND = `<div class ="col-12"><div class="alert alert-danger">no images found</div></div>`;
+
+    /**
+     * part of the fetch function
+     * @param response
+     * @returns {Promise<never>|Promise<unknown>}
+     */
+    function status(response) {
+        if (response.status >= 200 && response.status < 300) {
+            return Promise.resolve(response)
+        } else {
+            return Promise.reject(new Error(response.statusText))
+        }
+    }
+
+    /**
+     * part of the fetch function
+     * @param response
+     * @returns json
+     */
+    function json(response) {
+        return response.json()
+    }
+
+    /**
+     * uses nasa servers using fetch and private api key to search the photos.
+     * also showing modals if needed and toggles loading gif
+     * @param mission: the mission
+     * @param date: given date, sol or earth date
+     * @param camera: the camera
+     * @param responsePhotos: we return the photos using this param
+     *
+     */
+    function nasaSearch(mission, date, camera, responsePhotos) {
+        const newdate = date.match('-') ? `earth_date=${date}` : `sol=${date}`;
+        toggleLoadingGif();
+        fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${mission}/photos?${newdate}&camera=${camera}&api_key=${APIKEY}`)
+            .then(status)
+            .then(json)
+            .then(function (response) {
+                responsePhotos = response.photos;
+                // stop loading gif
+                toggleLoadingGif();
+                showSearchResults(responsePhotos);
+
+            })
+            .catch(function (error) {
+                // stop loading gif
+                toggleLoadingGif();
+                console.log(REQUEST_FAILED, error);
+                showErrorModal("nasa servers are unvalible right now, try again later");
+                //
+            });
+    }
+
+    publicData.searchImage = (e) => {
+
+        e.preventDefault();
+
+        if (!websiteInitialized){
+            showErrorModal(SEARCH_NOT_AVAILABLE);
+            return
+        }
+
+        if (validateForm()){
+            const mission = document.getElementById("missionid").value;
+            const date = document.getElementById('dateid').value;
+            const camera = document.getElementById('cameraid').value;
+            // start loading gif
+            nasaSearch(mission, date, camera, photos);
+        }
+    }
+    const toggleLoadingGif = () => {
+        document.getElementById("loading").classList.toggle("d-none");
+    }
+
+
+    /**
+     * display error msg bellow some element
+     * @param element - the element
+     * @param msg - the message
+     */
+    function showValidationError(element,msg) {
+        element.nextElementSibling.innerHTML = msg;
+        element.classList.add("is-invalid")
+    }
+
+    /**
+     * clear validation errors
+     */
+    const clearValidationErrors = () => {
+        document.querySelectorAll(".inputentry").forEach(
+            (elem)=>{elem.classList.remove("is-invalid")}
+        )
+        document.querySelectorAll(".errormessage").forEach(
+            (elem)=>{elem.innerHTML = ""}
+        )
+    }
+
+    /**
+     * validates the form. cheking all fields and showing errors if needed.
+     * exepet empty field error (this one is taken care of using html)
+     * @returns {boolean}
+     * returns true if form is valid, else false
+     */
+    function validateForm() {
+        clearValidationErrors();
+        let formValidation = true;
+
+        let mission = document.getElementById("missionid").value;
+        let inputdate = document.getElementById("dateid").value;
+
+        let testDate = validatorModule.isDate(inputdate);
+        let testNumber = validatorModule.isNumber(inputdate);
+        if (!testDate.isValid) {
+            if (!testNumber.isValid) {
+                showValidationError(document.getElementById("dateid"),testNumber.message);
+                formValidation = false;
+            } else {
+                //check range of sol
+                if (inputdate > nasaMinMax[mission].max_sol) {
+                    showValidationError(document.getElementById("dateid"),
+                        `max sol date is ${nasaMinMax[mission].max_sol}`)
+                    formValidation = false;
+                }
+            }
+        } else {
+            // check range of date
+            if ((Date.parse(inputdate) > Date.parse(nasaMinMax[mission].max_date))) {
+                showValidationError(document.getElementById("dateid"),
+                    `the mission you have selected requires a date before ${nasaMinMax[mission].max_date}`);
+                formValidation = false;
+            }
+            else if (Date.parse(inputdate) < Date.parse(nasaMinMax[mission].landing_date)) {
+                showValidationError(document.getElementById("dateid"),
+                    `the mission you have selected requires a date after ${nasaMinMax[mission].landing_date}`);
+                formValidation = false;
+            }
+        }
+        return formValidation;
+    }
+
+    /**
+     * creates the results html cards using toHtmlCards in a loop,
+     * and inserts the html to the index
+     * @param photoslist: the search result list of photos
+     */
+    function showSearchResults(photoslist) {
+        let allcards = "";
+        if (photoslist.length === 0) {
+            document.getElementById("cardsid").innerHTML = NO_IMAGES_FOUND;
+            return;
+        }
+        for (const image of photoslist) {
+            allcards += htmlGenerator.toHtmlCard(image);
+        }
+        document.getElementById("cardsid").innerHTML = allcards;
+
+        for (const image of photoslist) {
+            document.getElementById(image.id).addEventListener("click", (e) => {
+                let found = photoslist.find(em => em.id == e.target.id);
+
+                if (savedMap.get(e.target.id) != null) {
+                    // pop up msg
+                    showErrorModal(IMAGE_ALREADY_SAVED);
+                }
+                else {
+                    savedMap.set(e.target.id, found);
+                    document.getElementById("savedlist").innerHTML = htmlGenerator.toHtmlSavedList(savedMap);
+                }
+            })
+        }
+    }
+
+    /**
+     * shows the caroussel
+     */
+    publicData.createCarousel = () =>{
+        if (savedMap.size > 0) {
+            document.getElementById("innercarousel").innerHTML = htmlGenerator.toHtmlCaroussel(savedMap);
+            document.getElementById("carousel").classList.remove("d-none");
+        }
+        else {
+            showErrorModal("no saved images found.")
+        }
+
+    }
+    /**
+     * hides the carrousel
+     */
+    publicData.hideCarousel = () => {
+        if (savedMap.size > 0) {
+            let myCarousel = document.getElementById("carousel")
+            let carousel = new bootstrap.Carousel(myCarousel)
+            carousel.pause();
+            myCarousel.classList.add("d-none");
+        }
+        else {
+            showErrorModal("no saved images found.")
+        }
+    }
+    /**
+     * initializind the 3 missions manifests
+     */
+    publicData.initMars = () => {
+        getData("Curiosity");
+        getData("Spirit");
+        getData("Opportunity");
+    }
+
+    /**
+     * pops an Error modal
+     * @param msg: the message we want to display in the modal
+     */
+    function showErrorModal(msg){
+        let myModal = new bootstrap.Modal(document.getElementById("errormodal"))
+        document.getElementById("errormodalmsg").innerHTML = msg;
+        myModal.show();
+    }
 
 // the function that triggers an Ajax call
-function getData(mission) {
-    fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/${mission}?api_key=${APIKEY}`)
-        .then(status)
-        .then(json)
-        .then(function (response) {
-            nasaMinMax[mission] = {
-                max_date: response.photo_manifest.max_date,
-                landing_date: response.photo_manifest.landing_date,
-                max_sol: response.photo_manifest.max_sol
-            }
-        })
-        .catch(function (error) {
-            if (websiteInitialized)
-                showErrorModal("there was some problem initializing the website.");
-            websiteInitialized = false;
-        });
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    initMars();
-    //document.getElementById("searchbtn").addEventListener("click", searchImage);
-    document.getElementById("searchform").addEventListener("submit", searchImage);
-
-    document.getElementById("startslide").addEventListener("click", createCarousel);
-    document.getElementById("stopslide").addEventListener("click", hideCarousel);
-
-    document.getElementById("clearbtn").addEventListener("click", ()=>{
+    /**
+     * first fetch to get manifest information for the validation.
+     * if this fetch is unsuccessful the site wont work.
+     * @param mission: the mission
+     */
+    function getData(mission) {
+        fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/${mission}?api_key=${APIKEY}`)
+            .then(status)
+            .then(json)
+            .then(function (response) {
+                nasaMinMax[mission] = {
+                    max_date: response.photo_manifest.max_date,
+                    landing_date: response.photo_manifest.landing_date,
+                    max_sol: response.photo_manifest.max_sol
+                }
+            })
+            .catch(function () {
+                if (websiteInitialized)
+                    showErrorModal(INIT_ERROR);
+                websiteInitialized = false;
+            });
+    }
+    publicData.clearButtonHandler = () => {
         document.getElementById("searchform").reset();
         clearValidationErrors();
         document.getElementById("cardsid").innerHTML = "";
-    })
+    }
+    return publicData;
+})();
 
+/**
+ * Dom listeners
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    ex3Module.initMars();
+    document.getElementById("searchform").addEventListener("submit", ex3Module.searchImage);
+    document.getElementById("startslide").addEventListener("click", ex3Module.createCarousel);
+    document.getElementById("stopslide").addEventListener("click", ex3Module.hideCarousel);
+    document.getElementById("clearbtn").addEventListener("click", ex3Module.clearButtonHandler);
 }, false);
 
-// })();
 
