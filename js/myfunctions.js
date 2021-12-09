@@ -402,14 +402,14 @@ const htmlGenerator = (function() {
     const toHtmlCard = function (photo) {
         return `<div class="col mb-3">
             <div class="card" style="width: 18rem;">
-                <img src="${photo.img_src}" class="card-img-top" alt="...">
+                <img src="${photo.img_src}" class="card-img-top" alt="image">
                 <div class="card-body">
                     <p class="card-text"> 
                     ${photo.earth_date} <br/>
                     ${photo.sol} <br/>  
                     ${photo.camera.name} <br/>
                     ${photo.rover.name}</p>  
-                    <a href="#" class="btn btn-primary" id=${photo.id}>Save</a>
+                    <button type="button" class="btn btn-primary" id="${photo.id}">Save</button> 
                     <a href="${photo.img_src}" class="btn btn-primary" target="_blank">Full Size</a>
                 </div>
             </div>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0954897-46ee-4363-9814-7cfe5ab796e9" name="Changes" comment="documentation-on-funcs">
+    <list default="true" id="f0954897-46ee-4363-9814-7cfe5ab796e9" name="Changes" comment="documentation-on-funcs-and-readme-done">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/myfunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/myfunctions.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -33,6 +33,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SONARLINT_PRECOMMIT_ANALYSIS" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -81,7 +82,9 @@
       <workItem from="1638882765692" duration="74000" />
       <workItem from="1638884471457" duration="740000" />
       <workItem from="1638897529979" duration="5615000" />
-      <workItem from="1639052094391" duration="6107000" />
+      <workItem from="1639052094391" duration="6972000" />
+      <workItem from="1639076511901" duration="67000" />
+      <workItem from="1639077111487" duration="1262000" />
     </task>
     <task id="LOCAL-00001" summary="grid">
       <created>1637507868185</created>
@@ -139,7 +142,14 @@
       <option name="project" value="LOCAL" />
       <updated>1639063783916</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="documentation-on-funcs-and-readme-done">
+      <created>1639066741894</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1639066741894</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -167,6 +177,7 @@
     <MESSAGE value="aranged-in-modules" />
     <MESSAGE value="aranged-in-modules1" />
     <MESSAGE value="documentation-on-funcs" />
-    <option name="LAST_COMMIT_MESSAGE" value="documentation-on-funcs" />
+    <MESSAGE value="documentation-on-funcs-and-readme-done" />
+    <option name="LAST_COMMIT_MESSAGE" value="documentation-on-funcs-and-readme-done" />
   </component>
 </project>
