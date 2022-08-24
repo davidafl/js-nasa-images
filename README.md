@@ -2,13 +2,6 @@
 # NASA images browser
 
 
-<h1>Ex03 - Nasa</h1>
 <p>
-The submission is a WebStorm project that can be run directly from the IDE.
-</p>
-<h1>Assumptions</h1>
-<p>
-  The site use bootsrtap CDN therefore assumes an internet connection is available.
-</p>
-
+A front-end to the NASA public API images.
 </p>
